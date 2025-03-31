@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="layout/main :: head"></head>
+<body>
+    <header th:replace="layout/main :: header"></header>
+    <nav th:replace="layout/main :: sidebar"></nav>
+
+    <main class="main-content">
+        <div class="container">
+            <h2 class="mb-4">Checkout</h2>
+            <div class="row">
+                <!-- Shipping Information -->
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Shipping Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="checkoutForm">
+                                <div class="mb-3">
+                                    <label for="shippingAddress" class="form-label">Shipping Address</label>
+                                    <textarea class="form-control" id="shippingAddress" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="note" class="form-label">Order Notes (Optional)</label>
+                                    <textarea class="form-control" id="note" rows="2"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Order Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="orderItems">
+                                <!-- Order items will be dynamically added here -->
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Total Items:</span>
+                                <span id="totalItems">0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <strong>Total Amount:</strong>
+                                <strong id="totalAmount">$0.00</strong>
+                            </div>
+                            <button class="btn btn-primary w-100" onclick="placeOrder()">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="layout/main :: footer"></footer>
+
+    <!-- Toast Container -->
+    <div class="toast-container">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
+    <th:block th:replace="layout/main :: scripts"></th:block>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderSummary();
+        });
+
+        function loadOrderSummary() {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            fetch('/api/cart', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(cart => {
+                if (cart.items.length === 0) {
+                    window.location.href = '/cart';
+                    return;
+                }
+                updateOrderSummary(cart);
+            })
+            .catch(error => {
+                console.error('Error loading cart:', error);
+                showToast('Error loading cart details', 'error');
+            });
+        }
+
+        function updateOrderSummary(cart) {
+            const orderItems = document.getElementById('orderItems');
+            orderItems.innerHTML = cart.items.map(item => `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <h6 class="mb-0">${item.product.name}</h6>
+                        <small class="text-muted">${item.quantity} x $${item.product.price}</small>
+                    </div>
+                    <span>$${item.subtotal}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('totalItems').textContent = cart.totalItems;
+            document.getElementById('totalAmount').textContent = `$${cart.totalAmount}`;
+        }
+
+        function placeOrder() {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const shippingAddress = document.getElementById('shippingAddress').value;
+            const phone = document.getElementById('phone').value;
+            const note = document.getElementById('note').value;
+
+            if (!shippingAddress || !phone) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const orderData = {
+                shippingAddress,
+                phone,
+                note
+            };
+
+            fetch('/api/orders/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to place order');
+                }
+                return response.json();
+            })
+            .then(order => {
+                showToast('Order placed successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = `/orders/${order.id}`;
+                }, 1500);
+            })
+            .catch(error => {
+                console.error('Error placing order:', error);
+                showToast('Error placing order. Please try again.', 'error');
+            });
+        }
+
+        function showToast(message, type) {
+            const toast = document.querySelector('.toast');
+            const toastBody = toast.querySelector('.toast-body');
+            
+            toast.classList.remove('bg-success', 'bg-danger');
+            toast.classList.add(type === 'success' ? 'bg-success' : 'bg-danger');
+            toastBody.textContent = message;
+            
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+        }
+    </script>
+</body>
+</html> 

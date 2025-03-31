@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title} ?: _">Golmart Store</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <th:block th:fragment="additional-head"></th:block>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h1 class="logo">GOLMART STORE</h1>
+            <nav>
+                <ul>
+                    <li><a th:href="@{/}" th:classappend="${#httpServletRequest.requestURI == '/' ? 'active' : ''}">HOME</a></li>
+                    <li><a th:href="@{/contact}" th:classappend="${#httpServletRequest.requestURI == '/contact' ? 'active' : ''}">CONTACT</a></li>
+                    <li><a th:href="@{/catalog}" th:classappend="${#httpServletRequest.requestURI == '/catalog' ? 'active' : ''}">CATALOG</a></li>
+                    <li><a th:href="@{/testimonials}" th:classappend="${#httpServletRequest.requestURI == '/testimonials' ? 'active' : ''}">TESTIMONIALS</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <th:block th:replace="${content}">
+                <!-- Content will be replaced by child templates -->
+            </th:block>
+        </main>
+
+        <!-- Image Section -->
+        <div class="image">
+            <img th:src="@{/images/shopping.jpg}" alt="Shopping">
+        </div>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+    <th:block th:fragment="additional-scripts"></th:block>
+</body>
+</html> 

@@ -1,0 +1,416 @@
+body {
+    font-family: 'Comic Neue', 'Roboto', sans-serif;
+    background-color: #FFF8E8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background-color: #FFF8E8;
+    z-index: 1000;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center; /* Căn giữa logo theo chiều dọc */
+    justify-content: flex-start; /* Căn logo về bên trái */
+}
+
+.search-bar {
+    position: absolute; /* Để có thể căn chỉnh tự do */
+    left: 75%; /* Đặt ở giữa */
+    top: 20px; /* Đặt trên ảnh shopping.png */
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 80px;
+    margin-right: 10px;
+}
+
+.logo-text span {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #FFF8E8;
+    border-radius: 30px;
+    padding: 10px 20px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+.search-bar input {
+    flex: 1; /* Chiếm toàn bộ không gian còn lại */
+    border: none; /* Xóa viền */
+    outline: none; /* Xóa viền khi focus */
+    background-color: transparent; /* Nền trong suốt */
+    font-size: 16px; /* Kích thước chữ */
+    padding: 5px; /* Khoảng cách bên trong */
+    color: #333; /* Màu chữ */
+}
+
+.search-bar .search-btn {
+    background-color: transparent; /* Nền trong suốt */
+    border: none; /* Xóa viền */
+    font-size: 20px; /* Kích thước biểu tượng */
+    cursor: pointer; /* Con trỏ chuột */
+    color: #333; /* Màu biểu tượng */
+    margin-left: 10px; /* Khoảng cách giữa nút và ô tìm kiếm */
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 80px; /* Height of header */
+    left: 0;
+    width: 200px;
+    font-weight: bold;
+    color: black;
+    font-size: 16px;
+    font-family: 'Times New Roman';
+    height: calc(100vh - 80px);
+    background-color: #FFF8E8;
+    padding: 20px;
+    z-index: 100;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+.sidebar ul li a {
+    font-size: 24px; /* Tăng kích thước chữ từ 20px lên 24px */
+    color: #000000; /* Đổi màu từ #333 sang màu đen */
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 500; /* Thêm độ đậm vừa phải cho chữ */
+}
+
+.sidebar ul li a.active,
+.sidebar ul li a:hover {
+    background-color: #D4E9D4;
+    color: #000000; /* Giữ màu đen khi hover */
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 200px; /* Same as sidebar width */
+    min-height: calc(100vh - 80px);
+    padding: 20px;
+    background-color: #FFF8E8;
+    font-family: "Times New Roman";
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.title-section h1 {
+    font-size: 90px; /* Kích thước chữ lớn */
+    font-weight: bold; /* Chữ đậm */
+    color: #333; /* Màu chữ */
+    text-align: center; /* Căn giữa chữ */
+    line-height: 1.2; /* Khoảng cách dòng */
+    font-family: 'Comic Neue', cursive; /* Font chữ giống ảnh */
+    margin-top: -20px; /* Đẩy chữ lên trên một chút */
+    margin-bottom: -5px; /* Đẩy chữ xuống dưới một chút */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Thêm bóng nhẹ để nổi bật */
+}
+
+/* Info Section */
+.info-section {
+    
+    display: flex; /* Sử dụng flexbox để căn chỉnh */
+    justify-content: space-between; /* Căn đều hai bên */
+    align-items: flex-start; /* Căn trên cùng */
+    gap: 20px; /* Khoảng cách giữa hai phần */
+    margin-top: 20px; /* Khoảng cách trên */
+}
+.title-section p {
+    font-size: 28px; /* Kích thước chữ */
+    color: #666; /* Màu chữ nhẹ nhàng */
+    margin-bottom: 30px; /* Khoảng cách dưới */
+    text-align: right; /* Căn chữ sang phải */
+    margin-right: 10px; /* Thêm khoảng cách từ bên phải */
+   padding-bottom: 20px;
+    
+    font-family: 'Roboto', sans-serif; /* Font chữ hiện đại */
+}
+.info-section .text-content {
+    flex: 1; /* Phần văn bản chiếm 1 phần */
+}
+
+
+
+.info-section h2 {
+    font-size: 24px; /* Kích thước chữ tiêu đề */
+    font-weight: bold; /* Chữ đậm */
+    color: #333; /* Màu chữ đậm */
+    margin-bottom: 10px; /* Khoảng cách dưới tiêu đề */
+    text-align: left; /* Căn trái */
+}
+
+
+.info-section p {
+    font-size: 20px; /* Kích thước chữ vừa phải */
+    color: #666; /* Màu chữ nhẹ nhàng */
+    line-height: 1.8; /* Tăng khoảng cách dòng */
+    text-align: justify; /* Căn đều hai bên */
+    margin: 10px 0; /* Khoảng cách trên và dưới */
+    font-family: 'Roboto', sans-serif; /* Font chữ hiện đại */
+}
+/* Promo Buttons */
+.promo-buttons {
+    display: flex; /* Hiển thị các nút theo hàng ngang */
+    gap: 15px; /* Khoảng cách giữa các nút */
+    margin-top: 20px; /* Khoảng cách trên */
+    justify-content: flex-start; /* Căn trái */
+}
+
+.promo-buttons .btn {
+    padding: 100px 30px; /* Tăng chiều cao nút */
+    border: none; /* Xóa viền */
+    border-radius: 20px; /* Bo góc nút */
+    font-size: 18px; /* Kích thước chữ */
+    font-weight: bold; /* Chữ đậm */
+    color: #333; /* Màu chữ đậm */
+    cursor: pointer; /* Con trỏ chuột */
+    text-align: center; /* Căn giữa chữ */
+    background-color: #fff; /* Nền trắng */
+    transition: transform 0.2s, box-shadow 0.2s; /* Hiệu ứng hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Thêm bóng để nổi bật */
+}
+
+.promo-buttons .btn.green {
+    background-color: #A8D5BA; /* Màu xanh lá nhạt */
+}
+
+.promo-buttons .btn.pink {
+    background-color: #F7C8E0; /* Màu hồng nhạt */
+}
+
+.promo-buttons .btn.yellow {
+    background-color: #FBE7A1; /* Màu vàng nhạt */
+}
+
+/* Auth Buttons */
+.auth-buttons {
+    margin-top: 50px; /* Khoảng cách trên */
+    display: flex;
+    gap: 40px; /* Khoảng cách giữa các nút */
+    justify-content: flex-start; /* Căn trái */
+}
+
+.auth-buttons .btn {
+    padding: 20px 50px; /* Kích thước nút */
+    border-radius: 20px; /* Bo góc nút */
+    font-size: 20px; /* Kích thước chữ */
+    font-weight: bold; /* Chữ đậm */
+    cursor: pointer; /* Con trỏ chuột */
+    border: none; /* Xóa viền */
+}
+
+.auth-buttons .btn.login {
+    background-color: #FFB3B3; /* Màu đỏ nhạt */
+    color: white; /* Màu chữ trắng */
+}
+
+.auth-buttons .btn.signup {
+    background-color: transparent; /* Nền trong suốt */
+    color: #333; /* Màu chữ đậm */
+    border: 2px solid #333; /* Viền đậm */
+    transition: background-color 0.3s, color 0.3s; /* Hiệu ứng hover */
+}
+
+.auth-buttons .btn.signup:hover {
+    background-color: #333; /* Nền đậm khi hover */
+    color: #fff; /* Màu chữ trắng khi hover */
+}
+/* Image Section */
+.image-section {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-section img {
+    width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều rộng của khung */
+    height: auto; /* Giữ tỷ lệ hình ảnh */
+    max-width: 500px; /* Giới hạn chiều rộng tối đa */
+    aspect-ratio: 3 / 4; /* Tạo tỷ lệ khung hình chữ nhật đứng (3:4) */
+    border-radius: 20px; /* Bo góc hình ảnh */
+    object-fit: cover; /* Cắt hình ảnh để vừa khung mà không bị méo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Thêm bóng để nổi bật */
+    margin: 0 auto; /* Căn giữa hình ảnh */
+}
+
+/* Contact Form */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.contact-form input, .contact-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.contact-form .btn.submit {
+    background-color: #A8D5BA;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Product Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.product-card img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+/* Testimonials */
+.testimonial {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.testimonial p {
+    font-size: 18px;
+    font-style: italic;
+    color: #555;
+}
+
+.testimonial h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.navbar {
+    display: flex;
+    justify-content: flex-start; /* Căn sang bên trái */
+    align-items: center;
+    padding: 10px;
+    background-color: #FCEEDC;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar ul li {
+    display: inline;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.navbar ul li a:hover {
+    background-color: #A8D5BA;
+    color: #fff;
+}
+
+/* Hero Section Adjustment */
+.hero-section {
+    padding: 2rem 4rem;
+    margin: -20px; /* Offset padding from main-content */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .hero-section {
+        padding: 2rem;
+    }
+
+    .nav-item {
+        color: black !important;
+    }
+
+    .footer {
+        margin-left: 90px;
+    }
+}

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/main :: head}"></head>
+<body>
+    <header th:replace="~{layout/main :: header}"></header>
+    <nav th:replace="~{layout/main :: sidebar}"></nav>
+
+    <main class="main-content">
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Spring Deals</h1>
+                <h2 class="hero-subtitle">Blooming Now !</h2>
+                <p class="hero-text">Special Sale starts today !</p>
+
+                <div class="store-address">
+                    <h3>557 STONE LANE , READING</h3>
+                    <p>Lorem ipsum dolor sit amet , consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua . Quis ipsum suspendisse ultrices gravida .</p>
+                </div>
+
+                <div class="promotion-buttons">
+                    <div class="promo-button disc-button">
+                        <div>DISC.</div>
+                        <div>50 %</div>
+                        <div>ALL</div>
+                        <div>ITEMS</div>
+                    </div>
+                    <div class="promo-button buy-button">
+                        <div>BUY 1</div>
+                        <div>GET 1</div>
+                        <div>FOR</div>
+                        <div>SELECTED</div>
+                        <div>ITEMS</div>
+                    </div>
+                    <div class="promo-button prize-button">
+                        <div>GET</div>
+                        <div>THE</div>
+                        <div>GRAND</div>
+                        <div>PRIZES</div>
+                        <div>ITEMS</div>
+                    </div>
+                </div>
+
+                <div class="auth-buttons">
+                    <button class="btn-login" onclick="$('#loginModal').modal('show')">LOG IN</button>
+                    <button class="btn-signup" onclick="$('#signupModal').modal('show')">SIGN UP</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img th:src="@{/images/shopping.jpg}" alt="Shopping">
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{layout/main :: footer}"></footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm" class="needs-validation" novalidate>
+                        <div class="form-group">
+                            <label for="username">Username/Email</label>
+                            <input type="text" class="form-control" id="username" required>
+                            <div class="invalid-feedback">Please enter your username or email</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" required>
+                            <div class="invalid-feedback">Please enter your password</div>
+                        </div>
+                        <div class="alert alert-danger" id="loginError" style="display: none;"></div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign Up</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="signupForm" class="needs-validation" novalidate>
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" required>
+                            <div class="invalid-feedback">Please enter your full name</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                            <div class="invalid-feedback">Please enter a valid email address</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newUsername">Username</label>
+                            <input type="text" class="form-control" id="newUsername" required>
+                            <div class="invalid-feedback">Please choose a username</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">Password</label>
+                            <input type="password" class="form-control" id="newPassword" required
+                                   pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$">
+                            <div class="invalid-feedback">
+                                Password must be at least 8 characters long and include both letters and numbers
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                            <div class="invalid-feedback">Passwords do not match</div>
+                        </div>
+                        <div class="alert alert-danger" id="signupError" style="display: none;"></div>
+                        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Shopping Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cartItems"></div>
+                    <div class="cart-total">
+                        <strong>Total: </strong>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="/checkout" class="btn btn-primary">Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{layout/main :: scripts}"></th:block>
+
+    <style>
+        .hero-section {
+            display: flex;
+            padding: 2rem 4rem;
+            background-color: #FFF5EC;
+            min-height: calc(100vh - 80px);
+            gap: 4rem;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            color: #333;
+            margin-bottom: 0;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 4rem;
+            color: #333;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .hero-text {
+            font-size: 2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .store-address {
+            margin-bottom: 2rem;
+            max-width: 80%;
+        }
+
+        .store-address h3 {
+            font-size: 1.25rem;
+            color: #333;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .store-address p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .promotion-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .promo-button {
+            padding: 1.5rem 1rem;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-width: 140px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            gap: 0.25rem;
+        }
+
+        .disc-button {
+            background-color: #B4D1A3;
+        }
+
+        .buy-button {
+            background-color: #E8A9A9;
+        }
+
+        .prize-button {
+            background-color: #D4B37F;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-login {
+            padding: 0.75rem 3rem;
+            background-color: #E8A9A9;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-signup {
+            padding: 0.75rem 2rem;
+            background-color: transparent;
+            border: 2px solid #E8A9A9;
+            border-radius: 25px;
+            color: #E8A9A9;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-login:hover {
+            background-color: #d98b8b;
+        }
+
+        .btn-signup:hover {
+            background-color: #E8A9A9;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .hero-section {
+                padding: 2rem;
+            }
+
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-section {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .hero-content {
+                text-align: center;
+                padding: 1rem 0;
+            }
+
+            .store-address {
+                max-width: 100%;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .promotion-buttons {
+                justify-content: center;
+            }
+
+            .auth-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 2.5rem;
+            }
+
+            .hero-text {
+                font-size: 1.5rem;
+            }
+
+            .promotion-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .promo-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        /* Cart Modal Styles */
+        .cart-total {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+            text-align: right;
+        }
+    </style>
+
+    <script>
+        // Form validation
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!this.checkValidity()) return;
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('jwtToken', data.token);
+                    localStorage.setItem('userData', JSON.stringify(data.user));
+                    window.location.reload();
+                } else {
+                    const error = await response.json();
+                    errorDiv.textContent = error.message || 'Login failed. Please check your credentials.';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'An error occurred during login.';
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Signup form submission
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!this.checkValidity()) return;
+
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorDiv = document.getElementById('signupError');
+
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'Passwords do not match';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const userData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                username: document.getElementById('newUsername').value,
+                password: password
+            };
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    $('#signupModal').modal('hide');
+                    $('#loginModal').modal('show');
+                } else {
+                    const error = await response.json();
+                    errorDiv.textContent = error.message || 'Registration failed. Please try again.';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'An error occurred during registration.';
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Add to cart function
+        function addToCart(button) {
+            const productId = button.getAttribute('data-id');
+            const token = localStorage.getItem('jwtToken');
+
+            if (!token) {
+                $('#loginModal').modal('show');
+                return;
+            }
+
+            fetch('/api/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    productId: productId,
+                    quantity: 1
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Show success message
+                        const toast = new bootstrap.Toast(document.getElementById('addToCartToast'));
+                        toast.show();
+                    } else {
+                        throw new Error('Failed to add to cart');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Show error message
+                });
+        }
+    </script>
+</body>
+</html>

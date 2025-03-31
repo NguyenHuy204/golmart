@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="layout/main :: head"></head>
+<body>
+    <header th:replace="layout/main :: header"></header>
+    <nav th:replace="layout/main :: sidebar"></nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Order Details</h2>
+                <a href="/orders" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left"></i> Back to Orders
+                </a>
+            </div>
+
+            <div class="row">
+                <!-- Order Information -->
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Order #<span id="orderId"></span></h5>
+                                <span class="badge" id="orderStatus"></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <h6>Order Date</h6>
+                                    <p id="orderDate"></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Last Updated</h6>
+                                    <p id="lastUpdated"></p>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <h6>Shipping Address</h6>
+                                <p id="shippingAddress"></p>
+                            </div>
+                            <div class="mb-3">
+                                <h6>Phone Number</h6>
+                                <p id="phone"></p>
+                            </div>
+                            <div class="mb-3">
+                                <h6>Order Notes</h6>
+                                <p id="note"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Items -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Order Items</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="orderItems">
+                                <!-- Order items will be dynamically added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Order Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Total Items:</span>
+                                <span id="totalItems">0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <strong>Total Amount:</strong>
+                                <strong id="totalAmount">$0.00</strong>
+                            </div>
+                            <div id="adminActions" style="display: none;">
+                                <hr>
+                                <h6>Update Order Status</h6>
+                                <select class="form-select mb-2" id="statusSelect">
+                                    <option value="PENDING">Pending</option>
+                                    <option value="CONFIRMED">Confirmed</option>
+                                    <option value="SHIPPING">Shipping</option>
+                                    <option value="DELIVERED">Delivered</option>
+                                    <option value="CANCELLED">Cancelled</option>
+                                </select>
+                                <button class="btn btn-primary w-100" onclick="updateOrderStatus()">
+                                    Update Status
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="layout/main :: footer"></footer>
+
+    <!-- Toast Container -->
+    <div class="toast-container">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
+    <th:block th:replace="layout/main :: scripts"></th:block>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderDetails();
+            checkAdminRole();
+        });
+
+        function loadOrderDetails() {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const orderId = window.location.pathname.split('/').pop();
+            fetch(`/api/orders/${orderId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Order not found');
+                }
+                return response.json();
+            })
+            .then(order => {
+                updateOrderDetails(order);
+            })
+            .catch(error => {
+                console.error('Error loading order:', error);
+                showToast('Error loading order details', 'error');
+            });
+        }
+
+        function updateOrderDetails(order) {
+            document.getElementById('orderId').textContent = order.id;
+            document.getElementById('orderStatus').textContent = order.status;
+            document.getElementById('orderStatus').className = `badge bg-${getStatusColor(order.status)}`;
+            document.getElementById('orderDate').textContent = formatDate(order.createdAt);
+            document.getElementById('lastUpdated').textContent = formatDate(order.updatedAt);
+            document.getElementById('shippingAddress').textContent = order.shippingAddress;
+            document.getElementById('phone').textContent = order.phone;
+            document.getElementById('note').textContent = order.note || 'No notes';
+
+            const orderItems = document.getElementById('orderItems');
+            orderItems.innerHTML = order.items.map(item => `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center">
+                        <img src="${item.product.imageUrl}" alt="${item.product.name}" 
+                             class="me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                        <div>
+                            <h6 class="mb-0">${item.product.name}</h6>
+                            <small class="text-muted">${item.quantity} x $${item.price}</small>
+                        </div>
+                    </div>
+                    <span>$${item.subtotal}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('totalItems').textContent = order.items.length;
+            document.getElementById('totalAmount').textContent = `$${order.totalAmount}`;
+            
+            if (document.getElementById('statusSelect')) {
+                document.getElementById('statusSelect').value = order.status;
+            }
+        }
+
+        function checkAdminRole() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            if (userData.role === 'ADMIN') {
+                document.getElementById('adminActions').style.display = 'block';
+            }
+        }
+
+        function updateOrderStatus() {
+            const token = localStorage.getItem('jwtToken');
+            const orderId = window.location.pathname.split('/').pop();
+            const status = document.getElementById('statusSelect').value;
+
+            fetch(`/api/orders/${orderId}/status?status=${status}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update order status');
+                }
+                return response.json();
+            })
+            .then(order => {
+                updateOrderDetails(order);
+                showToast('Order status updated successfully', 'success');
+            })
+            .catch(error => {
+                console.error('Error updating order status:', error);
+                showToast('Error updating order status', 'error');
+            });
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'PENDING': 'warning',
+                'CONFIRMED': 'info',
+                'SHIPPING': 'primary',
+                'DELIVERED': 'success',
+                'CANCELLED': 'danger'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleString();
+        }
+
+        function showToast(message, type) {
+            const toast = document.querySelector('.toast');
+            const toastBody = toast.querySelector('.toast-body');
+            
+            toast.classList.remove('bg-success', 'bg-danger');
+            toast.classList.add(type === 'success' ? 'bg-success' : 'bg-danger');
+            toastBody.textContent = message;
+            
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+        }
+    </script>
+</body>
+</html> 
